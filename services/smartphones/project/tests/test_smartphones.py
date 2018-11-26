@@ -8,7 +8,8 @@ from project.api.models import Smartphone
 
 
 def add_smartphone(name, brand, price, quantity, color):
-    smartphone = Smartphone(name=name, brand=brand, price=price, quantity=quantity, color=color)
+    smartphone = Smartphone(
+        name=name, brand=brand, price=price, quantity=quantity, color=color)
     db.session.add(smartphone)
     db.session.commit()
     return smartphone
@@ -110,7 +111,8 @@ class TestSmartphoneService(BaseTestCase):
         correctamente."""
         smartphone = add_smartphone('Moto-G', 'Motorola', '100', '10', 'red')
         with self.client:
-            response = self.client.get(f'/smartphones/{smartphone.idSmartphone}')
+            response = self.client.get(
+                f'/smartphones/{smartphone.idSmartphone}')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('Moto-G', data['data']['name'])
@@ -149,7 +151,6 @@ class TestSmartphoneService(BaseTestCase):
             self.assertEqual(len(data['data']['smartphones']), 2)
             self.assertIn('nam1', data['data']['smartphones'][0]['name'])
             self.assertIn('brd1', data['data']['smartphones'][0]['brand'])
-            
             self.assertIn('nam2', data['data']['smartphones'][1]['name'])
             self.assertIn('brd2', data['data']['smartphones'][1]['brand'])
             self.assertIn('satisfactorio', data['estado'])
@@ -160,7 +161,7 @@ class TestSmartphoneService(BaseTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'All Smartphones', response.data)
-        #self.assertIn(b'<p>No smartphones!</p>', response.data)
+#       self.assertIn(b'<p>No smartphones!</p>', response.data)
 
     def test_main_with_smartphones(self):
         """Ensure the main route behaves correctly when smartphones have been
@@ -171,7 +172,7 @@ class TestSmartphoneService(BaseTestCase):
             response = self.client.get('/')
             self.assertEqual(response.status_code, 200)
             self.assertIn(b'List Smartphones', response.data)
-            #self.assertNotIn(b'<p>No smartphones!</p>', response.data)
+#           self.assertNotIn(b'<p>No smartphones!</p>', response.data)
             self.assertIn(b'nam1', response.data)
             self.assertIn(b'nam2', response.data)
 
@@ -180,13 +181,16 @@ class TestSmartphoneService(BaseTestCase):
         with self.client:
             response = self.client.post(
                 '/',
-                data=dict(name='Prueba01', brand="marca01", price='100', quantity='8', color='pink'),
+                data=dict(
+                    name='Prueba01', brand="marca01", price='100',
+                    quantity='8', color='pink'),
                 follow_redirects=True
             )
             self.assertEqual(response.status_code, 200)
             self.assertIn(b'All Smartphones', response.data)
             self.assertNotIn(b'<p>No smartphones!</p>', response.data)
             self.assertIn(b'Prueba01', response.data)
+
 
 if __name__ == '__main__':
     unittest.main()

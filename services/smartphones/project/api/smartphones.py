@@ -5,7 +5,8 @@ from project.api.models import Smartphone
 from project import db
 
 
-smartphones_blueprint = Blueprint('smartphones', __name__, template_folder='./templates')
+smartphones_blueprint = Blueprint(
+    'smartphones', __name__, template_folder='./templates')
 
 
 @smartphones_blueprint.route('/smartphones/ping', methods=['GET'])
@@ -34,7 +35,9 @@ def add_smartphone():
     try:
         smartphone = Smartphone.query.filter_by(brand=brand).first()
         if not smartphone:
-            db.session.add(Smartphone(name=name, brand=brand, price=price, quantity=quantity, color=color))
+            db.session.add(Smartphone(
+                name=name, brand=brand, price=price,
+                quantity=quantity, color=color))
             db.session.commit()
             response_object['estado'] = 'satisfactorio'
             response_object['mensaje'] = f'{brand} fue agregado!!!'
@@ -55,7 +58,8 @@ def get_single_smartphone(smartphone_id):
         'mensaje': 'El smartphone no existe'
     }
     try:
-        smartphone = Smartphone.query.filter_by(idSmartphone=int(smartphone_id)).first()
+        smartphone = Smartphone.query.filter_by(
+            idSmartphone=int(smartphone_id)).first()
         if not smartphone:
             return jsonify(response_object), 404
         else:
@@ -81,7 +85,8 @@ def get_all_smartphones():
     response_object = {
         'estado': 'satisfactorio',
         'data': {
-            'smartphones': [smartphone.to_json() for smartphone in Smartphone.query.all()]
+            'smartphones': [
+                smartphone.to_json() for smartphone in Smartphone.query.all()]
         }
     }
     return jsonify(response_object), 200
@@ -95,7 +100,9 @@ def index():
         price = request.form['price']
         quantity = request.form['quantity']
         color = request.form['color']
-        db.session.add(Smartphone(name=name, brand=brand, price=price, quantity=quantity, color=color))
+        db.session.add(Smartphone(
+            name=name, brand=brand, price=price,
+            quantity=quantity, color=color))
         db.session.commit()
     smartphones = Smartphone.query.all()
     return render_template('index.html', smartphones=smartphones)

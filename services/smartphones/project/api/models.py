@@ -13,7 +13,8 @@ class Smartphone(db.Model):
     quantity = db.Column(db.String(128), nullable=False)
     color = db.Column(db.String(128), nullable=False)
     creation_date = db.Column(db.DateTime, default=func.now(), nullable=False)
-    modification_date = db.Column(db.DateTime, default=func.now(), nullable=True)
+    modification_date = db.Column(
+        db.DateTime, default=func.now(), nullable=True)
     status = db.Column(db.Boolean(), default=True, nullable=False)
 
     def to_json(self):
@@ -32,4 +33,3 @@ class Smartphone(db.Model):
         self.price = price
         self.quantity = quantity
         self.color = color
-
